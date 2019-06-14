@@ -1,11 +1,16 @@
-const db=require('./db.json')
-const fs =require('fs')
+const { exec } = require("child_process");
 
-const aux=db.user;
+// Set port (default: 3000). For Heroku, we need to use
+// the port set by the environment variable $PORT
+const port = process.env.PORT || 3000;
 
-for(let i=0;i<aux.length;i++)
-{
-  aux[i].appointment=aux[i].appointment[0]
-}
+const command = `json-server --watch db.json --port ${port}`;
 
-fs.writeFile('newfile.json',JSON.stringify(aux),()=>null)
+exec(command, (err, stdout, stderr) => {
+  if (err) {
+    console.log("Error running exec", err);
+    return;
+  }
+  console.log("stdout:", stdout);
+  console.log("stderr:", stderr);
+});
